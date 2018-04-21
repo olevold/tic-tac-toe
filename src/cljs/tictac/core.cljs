@@ -3,6 +3,16 @@
               [secretary.core :as secretary :include-macros true]
               [accountant.core :as accountant]))
 
+(def victory-states
+  [(+ 1 2 4)
+   (+ 8 16 32)
+   (+ 64 128 256)
+   (+ 1 8 64)
+   (+ 2 16 128)
+   (+ 4 32 256)
+   (+ 1 16 256)
+   (+ 4 16 64)]
+  )
 
 (defn flip-bits[x digits]
     (bit-and (bit-not x) (- (.pow js/Math 2 digits) 1))
@@ -27,10 +37,10 @@
 )
 
 (defn update-result []
-  (if (= (bit-or @player-checked @computer-checked) 511)
-    (reset! result 3)
-    nil
-  )
+  (cond
+    (= (bit-or @player-checked @computer-checked) 511) , (reset! result 4)
+
+    :else (reset! result 0))
   )
 
 (defn check-square [mask]
@@ -40,7 +50,11 @@
         (swap! player-checked + mask)
         (update-result)
         (if (= @result 0)
-          (computer-move)
+          (do
+            (reset! result 1)
+            (computer-move)
+            (update-result)
+            )
           nil
           )
         )
@@ -78,10 +92,11 @@
   [:div [:h2 "Welcome to tictac"]
    [:div [:a {:href "/about"} "go to about page"]]
    [:h1 (case @result
-          0 "..."
-          1 "I win!"
-          2 "You win!"
-          3 "Draw...")]
+          0 "Your move"
+          1 "Thinking..."
+          2 "I win!"
+          3 "You win!"
+          4 "Draw...")]
    (game-board)
    ]
    )
