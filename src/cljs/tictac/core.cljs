@@ -78,7 +78,7 @@
   [:div [:h2 "Welcome to tictac"]
    [:div [:a {:href "/about"} "go to about page"]]
    [:h1 (case @result
-          0 ""
+          0 "..."
           1 "I win!"
           2 "You win!"
           3 "Draw...")]
