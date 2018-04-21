@@ -38,14 +38,15 @@
 
 (defn update-result []
   (cond
+    (some #(= (bit-and @player-checked %) %) victory-states) , (reset! result 3)
+    (some #(= (bit-and @computer-checked %) %) victory-states) , (reset! result 2)
     (= (bit-or @player-checked @computer-checked) 511) , (reset! result 4)
-
     :else (reset! result 0))
   )
 
 (defn check-square [mask]
   (fn []
-    (if (not= (bit-and (bit-or @player-checked @computer-checked) mask) mask)
+    (if (and (not= (bit-and (bit-or @player-checked @computer-checked) mask) mask) (= @result 0))
       (do
         (swap! player-checked + mask)
         (update-result)
