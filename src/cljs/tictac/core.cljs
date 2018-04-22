@@ -25,6 +25,13 @@
     :else "")
   )
 
+(defn cell-class [mask]
+  (if (= (bit-and @winning-squares mask) mask)
+    "winning"
+    "normal"
+  )
+  )
+
 (defn computer-move []
   (let [free (flip-bits (bit-or @player-checked @computer-checked) 9)]
     (loop [candidate-move (.pow js/Math 2 (rand-int 9))]
@@ -36,10 +43,20 @@
   )
 )
 
+(defn check-victory [state]
+  (let [victory (some #(if (= (bit-and state %) %) % false) victory-states)]
+    (if victory
+      (reset! winning-squares victory)
+      nil
+      )
+      victory
+    )
+  )
+
 (defn update-result []
   (cond
-    (some #(= (bit-and @player-checked %) %) victory-states) , (reset! result 3)
-    (some #(= (bit-and @computer-checked %) %) victory-states) , (reset! result 2)
+    (check-victory @player-checked) , (reset! result 3)
+    (check-victory @computer-checked) , (reset! result 2)
     (= (bit-or @player-checked @computer-checked) 511) , (reset! result 4)
     :else (reset! result 0))
   )
@@ -67,6 +84,7 @@
 (def player-checked (atom 0))
 (def computer-checked (atom 0))
 (def result (atom 0))
+(def winning-squares (atom 0))
 
 ;; ------------------------
 ;; Views
@@ -74,17 +92,17 @@
   [:table
     [:tbody
       [:tr
-        [:td {:on-click (check-square 1)} (cell-content 1)]
-        [:td {:on-click (check-square 2)} (cell-content 2)]
-        [:td {:on-click (check-square 4)} (cell-content 4)]]
+        [:td {:on-click (check-square 1) :class (cell-class 1)} (cell-content 1)]
+        [:td {:on-click (check-square 2) :class (cell-class 2)} (cell-content 2)]
+        [:td {:on-click (check-square 4) :class (cell-class 4)} (cell-content 4)]]
       [:tr
-        [:td {:on-click (check-square 8)} (cell-content 8)]
-        [:td {:on-click (check-square 16)} (cell-content 16)]
-        [:td {:on-click (check-square 32)} (cell-content 32)]]
+        [:td {:on-click (check-square 8) :class (cell-class 8)} (cell-content 8)]
+        [:td {:on-click (check-square 16) :class (cell-class 16)} (cell-content 16)]
+        [:td {:on-click (check-square 32) :class (cell-class 32)} (cell-content 32)]]
       [:tr
-        [:td {:on-click (check-square 64)} (cell-content 64)]
-        [:td {:on-click (check-square 128)} (cell-content 128)]
-        [:td {:on-click (check-square 256)} (cell-content 256)]]
+        [:td {:on-click (check-square 64) :class (cell-class 64)} (cell-content 64)]
+        [:td {:on-click (check-square 128) :class (cell-class 128)} (cell-content 128)]
+        [:td {:on-click (check-square 256) :class (cell-class 256)} (cell-content 256)]]
     ]
   ]
 )

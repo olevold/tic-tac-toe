@@ -46,3 +46,7 @@ td {
   text-align: center;
   font-size: 8em;
 }
+
+.winning {
+  background-color: #cccccc;
+}
