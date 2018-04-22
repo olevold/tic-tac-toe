@@ -65,9 +65,8 @@
 
 (defn check-victory [state]
   (let [victory (some #(if (= (bit-and state %) %) % false) victory-states)]
-    (if victory
+    (when victory
       (reset! winning-squares victory)
-      nil
       )
       victory
     )
@@ -83,22 +82,17 @@
 
 (defn check-square [mask]
   (fn []
-    (if (and (not= (bit-and (bit-or @player-checked @computer-checked) mask) mask) (= @result 0))
-      (do
-        (swap! player-checked + mask)
+    (when (and (not= (bit-and (bit-or @player-checked @computer-checked) mask) mask) (= @result 0))
+      (swap! player-checked + mask)
+      (update-result)
+      (when (= @result 0)
+        (reset! result 1)
+        (computer-move)
         (update-result)
-        (if (= @result 0)
-          (do
-            (reset! result 1)
-            (computer-move)
-            (update-result)
-            )
-          nil
-          )
-        )
-      nil)
+      )
     )
   )
+)
 
 (defn start-over []
   (reset! player-checked 0)
