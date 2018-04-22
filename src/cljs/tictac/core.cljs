@@ -31,7 +31,7 @@
     "winning"
     "normal"
   )
-  )
+)
 
 (defn computer-move []
   (let [free (flip-bits (bit-or @player-checked @computer-checked) 9)]
@@ -78,7 +78,6 @@
           )
         )
       nil)
-    (.log js/console (str @player-checked " " @computer-checked))
     )
   )
 
