@@ -50,3 +50,19 @@ td {
 .winning {
   background-color: #cccccc;
 }
+
+circle {
+  stroke-dasharray: 314;
+  stroke-dashoffset: 314;
+  animation: draw_it 1s ;
+  animation-fill-mode: forwards;
+}
+
+@keyframes draw_it {
+  from {
+        stroke-dashoffset: 300;
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
+}
