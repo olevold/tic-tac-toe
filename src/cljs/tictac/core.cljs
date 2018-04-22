@@ -18,6 +18,10 @@
     (bit-and (bit-not x) (- (.pow js/Math 2 digits) 1))
 )
 
+(defn total-state []
+  (+ (* 1000 @player-checked) @computer-checked)
+)
+
 (defn cell-content [mask]
   (cond
     (= (bit-and @player-checked mask) mask) "X"
@@ -33,11 +37,26 @@
   )
 )
 
+(defn player-won []
+  (reset! result 3)
+  (let [moves (get @bad-moves (total-state))]
+    (if-not moves
+      (swap! bad-moves assoc (total-state) #{@last-computer-move})
+      (swap! bad-moves assoc (total-state) (conj moves @last-computer-move))
+    )
+  )
+)
+
+
 (defn computer-move []
+  (reset! state-before-last-computer-move (total-state))
   (let [free (flip-bits (bit-or @player-checked @computer-checked) 9)]
     (loop [candidate-move (.pow js/Math 2 (rand-int 9))]
       (if (= (bit-and free candidate-move) candidate-move)
-        (swap! computer-checked + candidate-move)
+        (do
+          (swap! computer-checked + candidate-move)
+          (reset! last-computer-move candidate-move)
+          )
         (recur (.pow js/Math 2 (rand-int 9)))
       )
     )
@@ -56,7 +75,7 @@
 
 (defn update-result []
   (cond
-    (check-victory @player-checked) , (reset! result 3)
+    (check-victory @player-checked) , (player-won)
     (check-victory @computer-checked) , (reset! result 2)
     (= (bit-or @player-checked @computer-checked) 511) , (reset! result 4)
     :else (reset! result 0))
@@ -81,10 +100,22 @@
     )
   )
 
+(defn start-over []
+  (reset! player-checked 0)
+  (reset! computer-checked 0)
+  (reset! result 0)
+  (reset! winning-squares 0)
+  (reset! state-before-last-computer-move 0)
+  (reset! last-computer-move 0)
+  )
+
 (def player-checked (atom 0))
 (def computer-checked (atom 0))
 (def result (atom 0))
 (def winning-squares (atom 0))
+(def state-before-last-computer-move (atom 0))
+(def last-computer-move (atom 0))
+(def bad-moves (atom {}))
 
 ;; ------------------------
 ;; Views
@@ -117,6 +148,7 @@
           3 "You win!"
           4 "Draw...")]
    (game-board)
+   [:a {:on-click start-over :href "#"} "Start over"]
    ]
    )
 
