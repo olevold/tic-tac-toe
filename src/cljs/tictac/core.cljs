@@ -3,6 +3,8 @@
               [secretary.core :as secretary :include-macros true]
               [accountant.core :as accountant]))
 
+(declare game-board)
+
 (def victory-states
   [(+ 1 2 4)
    (+ 8 16 32)
@@ -14,12 +16,20 @@
    (+ 4 16 64)]
   )
 
+(defonce player-checked (atom 0))
+(defonce computer-checked (atom 0))
+(defonce result (atom 0))
+(defonce winning-squares (atom 0))
+(defonce state-before-last-computer-move (atom 0))
+(defonce last-computer-move (atom 0))
+(defonce bad-moves (atom {}))
+
 (defn flip-bits[x digits]
     (bit-and (bit-not x) (- (.pow js/Math 2 digits) 1))
 )
 
 (defn total-state []
-  (+ (* 1000 @player-checked) @computer-checked)
+  (+ (* 512 @player-checked) @computer-checked)
 )
 
 (defn cell-content [mask]
@@ -37,28 +47,43 @@
   )
 )
 
-(defn player-won []
+(defn i-lost []
+  (swap! bad-moves assoc @state-before-last-computer-move (bit-or (get @bad-moves @state-before-last-computer-move) @last-computer-move))
+  )
+
+(defn player-won [move]
   (reset! result 3)
-  (let [moves (get @bad-moves (total-state))]
-    (if-not moves
-      (swap! bad-moves assoc (total-state) #{@last-computer-move})
-      (swap! bad-moves assoc (total-state) (conj moves @last-computer-move))
+  (i-lost)
+)
+
+(defn validate-move [move]
+  (let [free (flip-bits (bit-or @player-checked @computer-checked) 9)]
+    (if (= (get @bad-moves (total-state)) free)
+      (do
+        (.log js/console "I'm stuck!")
+        (i-lost)
+        (= (bit-and free move) move)
+        )
+      (and
+        (= (bit-and free move) move)
+        (if (not (= (bit-and (get @bad-moves (total-state)) move) move))
+          true
+          (.log js/console (str "Skipped move " move))
+        )
+      )
     )
   )
 )
 
-
 (defn computer-move []
-  (reset! state-before-last-computer-move (total-state))
-  (let [free (flip-bits (bit-or @player-checked @computer-checked) 9)]
-    (loop [candidate-move (.pow js/Math 2 (rand-int 9))]
-      (if (= (bit-and free candidate-move) candidate-move)
-        (do
-          (swap! computer-checked + candidate-move)
-          (reset! last-computer-move candidate-move)
-          )
-        (recur (.pow js/Math 2 (rand-int 9)))
-      )
+  (loop [candidate-move (.pow js/Math 2 (rand-int 9))]
+    (if (validate-move candidate-move)
+      (do
+        (reset! state-before-last-computer-move (total-state))
+        (swap! computer-checked + candidate-move)
+        (reset! last-computer-move candidate-move)
+        )
+      (recur (.pow js/Math 2 (rand-int 9)))
     )
   )
 )
@@ -72,9 +97,9 @@
     )
   )
 
-(defn update-result []
+(defn update-result [move]
   (cond
-    (check-victory @player-checked) , (player-won)
+    (check-victory @player-checked) , (player-won move)
     (check-victory @computer-checked) , (reset! result 2)
     (= (bit-or @player-checked @computer-checked) 511) , (reset! result 4)
     :else (reset! result 0))
@@ -84,17 +109,18 @@
   (fn []
     (when (and (not= (bit-and (bit-or @player-checked @computer-checked) mask) mask) (= @result 0))
       (swap! player-checked + mask)
-      (update-result)
+      (update-result mask)
       (when (= @result 0)
         (reset! result 1)
         (computer-move)
-        (update-result)
+        (update-result mask)
       )
     )
   )
 )
 
 (defn start-over []
+  (.log js/console "----------------------")
   (reset! player-checked 0)
   (reset! computer-checked 0)
   (reset! result 0)
@@ -102,14 +128,6 @@
   (reset! state-before-last-computer-move 0)
   (reset! last-computer-move 0)
   )
-
-(def player-checked (atom 0))
-(def computer-checked (atom 0))
-(def result (atom 0))
-(def winning-squares (atom 0))
-(def state-before-last-computer-move (atom 0))
-(def last-computer-move (atom 0))
-(def bad-moves (atom {}))
 
 ;; ------------------------
 ;; Views
