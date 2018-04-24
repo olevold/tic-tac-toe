@@ -58,14 +58,14 @@
 
 (defn validate-move [move]
   (let [free (flip-bits (bit-or @player-checked @computer-checked) 9)]
-    (if (= (get @bad-moves (total-state)) free)
-      (do
-        (.log js/console "I'm stuck!")
-        (i-lost)
-        (= (bit-and free move) move)
+    (and
+      (= (bit-and free move) move)
+      (or
+        (when (= (get @bad-moves (total-state)) free)
+          (js/alert "I'm stuck!")
+          (i-lost)
+          true
         )
-      (and
-        (= (bit-and free move) move)
         (if (not (= (bit-and (get @bad-moves (total-state)) move) move))
           true
           (.log js/console (str "Skipped move " move))
