@@ -23,6 +23,7 @@
 (defonce state-before-last-computer-move (atom 0))
 (defonce last-computer-move (atom 0))
 (defonce bad-moves (atom {}))
+(defonce winning-moves (atom {}))
 
 (defn flip-bits[x digits]
     (bit-and (bit-not x) (- (.pow js/Math 2 digits) 1))
@@ -56,13 +57,18 @@
   (i-lost)
 )
 
+(defn i-won []
+  (reset! result 2)
+  (swap! winning-moves assoc @state-before-last-computer-move @last-computer-move)
+)
+
 (defn validate-move [move]
   (let [free (flip-bits (bit-or @player-checked @computer-checked) 9)]
     (and
       (= (bit-and free move) move)
       (or
         (when (= (get @bad-moves (total-state)) free)
-          (js/alert "I'm stuck!")
+          (.log js/console "I'm stuck!")
           (i-lost)
           true
         )
@@ -76,7 +82,8 @@
 )
 
 (defn computer-move []
-  (loop [candidate-move (.pow js/Math 2 (rand-int 9))]
+  (when (get @winning-moves (total-state)) (.log js/console "Aha!"))
+  (loop [candidate-move (or (get @winning-moves (total-state)) (.pow js/Math 2 (rand-int 9)))]
     (if (validate-move candidate-move)
       (do
         (reset! state-before-last-computer-move (total-state))
@@ -100,7 +107,7 @@
 (defn update-result [move]
   (cond
     (check-victory @player-checked) , (player-won move)
-    (check-victory @computer-checked) , (reset! result 2)
+    (check-victory @computer-checked) , (i-won)
     (= (bit-or @player-checked @computer-checked) 511) , (reset! result 4)
     :else (reset! result 0))
   )
