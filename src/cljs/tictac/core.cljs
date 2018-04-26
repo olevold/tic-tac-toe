@@ -39,7 +39,7 @@
   (cond
     (= (bit-and @player-checked mask) mask) "\u274C"
     (= (bit-and @computer-checked mask) mask) [:svg {:class "circle-container"}
-                                                  [:circle {:fill "none" :stroke "#000000" }]]
+                                                  [:circle {:fill "none"}]]
     :else "")
   )
 
