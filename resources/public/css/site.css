@@ -61,7 +61,7 @@ circle {
   cx: 40;
   cy: 40;
   r: 34;
-  stroke-width: 8px;
+  stroke-width: 10px;
   stroke-dasharray: 215;
   stroke-dashoffset: 215;
   animation: draw_it 1s ;
@@ -83,7 +83,7 @@ circle {
     width: 150px;
     height: 150px;
     text-align: center;
-    font-size: 8em;
+    font-size: 10em;
   }
 
   .circle-container {
@@ -96,7 +96,7 @@ circle {
     cx: 60;
     cy: 60;
     r: 50;
-    stroke-width: 12px;
+    stroke-width: 15px;
     stroke-dasharray: 314;
     stroke-dashoffset: 314;
     animation: draw_it 1s ;
