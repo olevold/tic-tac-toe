@@ -1,7 +1,8 @@
 (ns tictac.core
     (:require [reagent.core :as reagent :refer [atom]]
               [secretary.core :as secretary :include-macros true]
-              [accountant.core :as accountant]))
+              [accountant.core :as accountant]
+              [alandipert.storage-atom :refer [local-storage]]))
 
 (declare game-board)
 
@@ -22,8 +23,9 @@
 (defonce winning-squares (atom 0))
 (defonce state-before-last-computer-move (atom 0))
 (defonce last-computer-move (atom 0))
-(defonce bad-moves (atom {}))
-(defonce winning-moves (atom {}))
+
+(defonce bad-moves (local-storage (atom {}) :tictac-bad-moves))
+(defonce winning-moves (local-storage  (atom {}) :tictac-winning-moves))
 
 (defn flip-bits[x digits]
     (bit-and (bit-not x) (- (.pow js/Math 2 digits) 1))

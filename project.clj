@@ -8,6 +8,7 @@
                  [ring-server "0.5.0"]
                  [reagent "0.7.0"]
                  [reagent-utils "0.3.1"]
+                 [alandipert/storage-atom "1.2.4"]
                  [ring "1.6.3"]
                  [ring/ring-defaults "0.3.1"]
                  [compojure "1.6.0"]
@@ -91,7 +92,7 @@
                                   [org.clojure/tools.nrepl "0.2.13"]
                                   [com.cemerick/piggieback "0.2.2"]
                                   [pjstadig/humane-test-output "0.8.3"]
-                                  
+
  ]
 
                    :source-paths ["env/dev/clj"]
