@@ -162,7 +162,7 @@
 (defn home-page []
   [:div [:h2 "Welcome to tictac"]
    [:div [:a {:href "/about"} "go to about page"]]
-   [:h1 (case @result
+   [:h3 (case @result
           0 "Your move"
           1 "Thinking..."
           2 "I win!"
