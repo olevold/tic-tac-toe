@@ -38,8 +38,8 @@
 (defn cell-content [mask]
   (cond
     (= (bit-and @player-checked mask) mask) "X"
-    (= (bit-and @computer-checked mask) mask) [:svg {:width "120" :height "120" :viewBox "0 0 120 120"}
-                                                  [:circle {:cx "60" :cy "60" :r "50" :fill "none" :stroke "#000000" :stroke-width "12" }]]
+    (= (bit-and @computer-checked mask) mask) [:svg {:class "circle-container"}
+                                                  [:circle {:fill "none" :stroke "#000000" }]]
     :else "")
   )
 

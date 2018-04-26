@@ -39,30 +39,76 @@ table {
   margin-top: 50px;
 }
 
-td {
-  border: solid;
-  width: 150px;
-  height: 150px;
-  text-align: center;
-  font-size: 8em;
-}
-
 .winning {
   background-color: #cccccc;
 }
 
+td {
+  border: solid;
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  font-size: 6em;
+}
+
+.circle-container {
+  width: 80px;
+  height: 80px;
+  viewBox: "0 0 80 80"
+}
+
 circle {
-  stroke-dasharray: 314;
-  stroke-dashoffset: 314;
+  cx: 40;
+  cy: 40;
+  r: 34;
+  stroke-width: 8px;
+  stroke-dasharray: 215;
+  stroke-dashoffset: 215;
   animation: draw_it 1s ;
   animation-fill-mode: forwards;
 }
 
 @keyframes draw_it {
   from {
-        stroke-dashoffset: 300;
+      stroke-dashoffset: 215;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media screen and (min-width: 480px) {
+  td {
+    border: solid;
+    width: 150px;
+    height: 150px;
+    text-align: center;
+    font-size: 8em;
+  }
+
+  .circle-container {
+    width: 120px;
+    height: 120px;
+    viewBox: "0 0 120 120"
+  }
+
+  circle {
+    cx: 60;
+    cy: 60;
+    r: 50;
+    stroke-width: 12px;
+    stroke-dasharray: 314;
+    stroke-dashoffset: 314;
+    animation: draw_it 1s ;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes draw_it {
+    from {
+        stroke-dashoffset: 314;
     }
-    to {
+      to {
         stroke-dashoffset: 0;
+      }
     }
 }
