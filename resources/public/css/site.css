@@ -48,7 +48,8 @@ td {
   width: 100px;
   height: 100px;
   text-align: center;
-  font-size: 6em;
+  font-size: 5em;
+  font-weight: bold;
 }
 
 .circle-container {
@@ -83,7 +84,7 @@ circle {
     width: 150px;
     height: 150px;
     text-align: center;
-    font-size: 10em;
+    font-size: 8em;
   }
 
   .circle-container {

@@ -37,7 +37,7 @@
 
 (defn cell-content [mask]
   (cond
-    (= (bit-and @player-checked mask) mask) "\u274C"
+    (= (bit-and @player-checked mask) mask) "\u2a09"
     (= (bit-and @computer-checked mask) mask) [:svg {:class "circle-container"}
                                                   [:circle {:fill "none"}]]
     :else "")
