@@ -52,7 +52,7 @@ td {
   font-weight: bold;
 }
 
-.circle-container {
+.svg-container {
   width: 80px;
   height: 80px;
 }
@@ -67,6 +67,11 @@ circle {
   stroke-dashoffset: 215;
   animation: draw_it 1s ;
   animation-fill-mode: forwards;
+}
+
+line {
+  stroke: #333;
+  stroke-width: 10px;
 }
 
 @keyframes draw_it {
@@ -87,7 +92,7 @@ circle {
     font-size: 8em;
   }
 
-  .circle-container {
+  .svg-container {
     width: 120px;
     height: 120px;
   }
@@ -101,6 +106,10 @@ circle {
     stroke-dashoffset: 314;
     animation: draw_it 1s ;
     animation-fill-mode: forwards;
+  }
+
+  line {
+    stroke-width: 15px;
   }
 
   @keyframes draw_it {

@@ -37,8 +37,10 @@
 
 (defn cell-content [mask]
   (cond
-    (= (bit-and @player-checked mask) mask) "\u2a09"
-    (= (bit-and @computer-checked mask) mask) [:svg {:class "circle-container"}
+    (= (bit-and @player-checked mask) mask) [:svg {:class "svg-container"}
+                                                  [:line {:x1 "5%" :x2 "95%" :y1 "5%" :y2 "95%"}]
+                                                  [:line {:x1 "95%" :x2 "5%" :y1 "5%" :y2 "95%"}]]
+    (= (bit-and @computer-checked mask) mask) [:svg {:class "svg-container"}
                                                   [:circle {:fill "none"}]]
     :else "")
   )
