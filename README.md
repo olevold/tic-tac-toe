@@ -4,6 +4,8 @@ This tic tac toe implementation is supposed to learn from its mistakes! State is
 
 The game does not try to evaluate moves, it picks random moves that are valid (unchecked squares) and not blacklisted.The game learns by blacklisting moves that lead to defeat. If all moves in a certain position lead to defeat, the move into that position is blacklisted. Winning moves are remembered and used rather than random moves.
 
+Try it on https://tic-tac-ole.herokuapp.com/ !
+
 ## Development mode
 
 To start the Figwheel compiler, navigate to the project folder and run the following command in the terminal:

@@ -178,7 +178,7 @@
 (defn about-page []
   [:div [:h2 "About tic tac toe"]
    [:div [:a {:href "/"} "go to the home page"]
-         [:p "This tic tac toe implementation is supposed to learn from its mistakes!"
+         [:p "This tic tac toe implementation is supposed to learn from its mistakes."
           " State is maintained as two integers, one for each player. Each bit signifies a checked/unchecked square."]
           [:p "The game does not try to evaluate moves, it picks random moves that are valid (unchecked squares) and not blacklisted."
               "The game learns by blacklisting moves that lead to defeat. If all moves in a certain position "
