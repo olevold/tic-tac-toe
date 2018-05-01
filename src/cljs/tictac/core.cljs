@@ -160,7 +160,7 @@
 )
 
 (defn home-page []
-  [:div [:h2 "Welcome to tictac"]
+  [:div [:h2 "Tic tac toe"]
    [:div [:a {:href "/about"} "go to about page"]]
    [:h3 (case @result
           0 "Your move"
@@ -174,7 +174,7 @@
    )
 
 (defn about-page []
-  [:div [:h2 "About tictac"]
+  [:div [:h2 "About tic tac toe"]
    [:div [:a {:href "/"} "go to the home page"]
          [:p "This tic tac toe implementation is supposed to learn from its mistakes!"]]])
 
