@@ -7,6 +7,7 @@
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [ring-server "0.5.0"]
                  [cljs-ajax "0.7.3"]
+                 [cheshire "5.8.0"]
                  [reagent "0.7.0"]
                  [reagent-utils "0.3.1"]
                  [alandipert/storage-atom "1.2.4"]

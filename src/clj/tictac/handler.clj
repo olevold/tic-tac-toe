@@ -3,7 +3,8 @@
             [compojure.route :refer [not-found resources]]
             [hiccup.page :refer [include-js include-css html5]]
             [tictac.middleware :refer [wrap-middleware]]
-            [config.core :refer [env]]))
+            [config.core :refer [env]]
+            [cheshire.core :refer [generate-string]]))
 
 (defonce bad-moves (atom {}))
 (defonce winning-moves-moves (atom {}))
@@ -38,11 +39,15 @@
     )
   )
 
+(defn get-bad-moves []
+  {:headers {"Content-type" "application/json"} :body (generate-string @bad-moves)}
+  )
+
 (defroutes routes
   (GET "/" [] (loading-page))
   (GET "/about" [] (loading-page))
   (POST "/report-bad-move" req (report-bad-move req))
-
+  (GET "/get-bad-moves" [] (get-bad-moves))
   (resources "/")
   (not-found "Not Found"))
 
