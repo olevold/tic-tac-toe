@@ -2,7 +2,8 @@
     (:require [reagent.core :as reagent :refer [atom]]
               [secretary.core :as secretary :include-macros true]
               [accountant.core :as accountant]
-              [alandipert.storage-atom :refer [local-storage]]))
+              [alandipert.storage-atom :refer [local-storage]]
+              [ajax.core :refer [GET POST raw-response-format]]))
 
 (declare game-board)
 
@@ -54,6 +55,9 @@
 
 (defn i-lost []
   (swap! bad-moves assoc @state-before-last-computer-move (bit-or (get @bad-moves @state-before-last-computer-move) @last-computer-move))
+  (let [form-data (doto (js/FormData.) (.set "position" @state-before-last-computer-move) (.set "move" @last-computer-move))]
+    (POST "/report-bad-move" {:body form-data :format (raw-response-format)})
+    )
   )
 
 (defn player-won [move]
