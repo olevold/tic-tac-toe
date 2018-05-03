@@ -28,6 +28,10 @@
 (defonce bad-moves (local-storage (atom {}) :tictac-bad-moves))
 (defonce winning-moves (local-storage  (atom {}) :tictac-winning-moves))
 
+(GET "/get-bad-moves"
+  {:handler #(reset! bad-moves (into {} (for [z %] [(js/parseInt (first z)) (second z)])))}
+)
+
 (defn flip-bits[x digits]
     (bit-and (bit-not x) (- (.pow js/Math 2 digits) 1))
 )
