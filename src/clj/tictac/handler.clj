@@ -4,10 +4,23 @@
             [hiccup.page :refer [include-js include-css html5]]
             [tictac.middleware :refer [wrap-middleware]]
             [config.core :refer [env]]
+            [duratom.core :refer [duratom]]
             [cheshire.core :refer [generate-string]]))
 
-(defonce bad-moves (atom {}))
-(defonce winning-moves (atom {}))
+(try
+  (defonce bad-moves (duratom :postgres-db :db-config (System/getenv "DATABASE_URL") :table-name "tictac_bad" :row-id 0 :init {}))
+  (catch java.io.IOException e (defonce bad-moves (atom {})) (prn "caught IOException"))
+  (catch java.sql.SQLException e (defonce bad-moves (atom {})) (prn "caught SQLException"))
+  )
+
+(try
+  (defonce winning-moves (duratom :postgres-db :db-config (System/getenv "DATABASE_URL") :table-name "tictac_winning" :row-id 0 :init {}))
+  (catch java.io.IOException e (defonce bad-moves (atom {})))
+  (catch java.sql.SQLException e (defonce winning-moves (atom {})))
+  )
+
+
+
 
 (def mount-target
   [:div#app
