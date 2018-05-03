@@ -32,6 +32,10 @@
   {:handler #(reset! bad-moves (into {} (for [z %] [(js/parseInt (first z)) (second z)])))}
 )
 
+(GET "/get-winning-moves"
+  {:handler #(reset! winning-moves (into {} (for [z %] [(js/parseInt (first z)) (second z)])))}
+)
+
 (defn flip-bits[x digits]
     (bit-and (bit-not x) (- (.pow js/Math 2 digits) 1))
 )
@@ -72,6 +76,9 @@
 (defn i-won []
   (reset! result 2)
   (swap! winning-moves assoc @state-before-last-computer-move @last-computer-move)
+  (let [form-data (doto (js/FormData.) (.set "position" @state-before-last-computer-move) (.set "move" @last-computer-move))]
+    (POST "/report-winning-move" {:body form-data :format (raw-response-format)})
+    )
 )
 
 (defn validate-move [move]

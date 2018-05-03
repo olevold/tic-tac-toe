@@ -7,7 +7,7 @@
             [cheshire.core :refer [generate-string]]))
 
 (defonce bad-moves (atom {}))
-(defonce winning-moves-moves (atom {}))
+(defonce winning-moves (atom {}))
 
 (def mount-target
   [:div#app
@@ -39,15 +39,30 @@
     )
   )
 
+(defn report-winning-move [req]
+  (let [params (:multipart-params req)
+        position (Integer/parseInt (get params "position"))
+        move     (Integer/parseInt (get params "move"))
+        ]
+        (swap! winning-moves assoc position move)
+    )
+  )
+
 (defn get-bad-moves []
   {:headers {"Content-type" "application/json"} :body (generate-string @bad-moves)}
+  )
+
+(defn get-winning-moves []
+  {:headers {"Content-type" "application/json"} :body (generate-string @winning-moves)}
   )
 
 (defroutes routes
   (GET "/" [] (loading-page))
   (GET "/about" [] (loading-page))
   (POST "/report-bad-move" req (report-bad-move req))
+  (POST "/report-winning-move" req (report-winning-move req))
   (GET "/get-bad-moves" [] (get-bad-moves))
+  (GET "/get-winning-moves" [] (get-winning-moves))
   (resources "/")
   (not-found "Not Found"))
 
