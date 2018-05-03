@@ -197,7 +197,9 @@
           " State is maintained as two integers, one for each player. Each bit signifies a checked/unchecked square."]
           [:p "The game does not try to evaluate moves, it picks random moves that are valid (unchecked squares) and not blacklisted."
               "The game learns by blacklisting moves that lead to defeat. If all moves in a certain position "
-              "lead to defeat, the move into that position is blacklisted. Winning moves are remembered and used rather than random moves."]]])
+              "lead to defeat, the move into that position is blacklisted. Winning moves are remembered and used rather than random moves."]
+          [:p "Winning and losing moves will be reported to the backend and stored there. The game will try to fetch this data on page load. "
+              "If the system variable DATABASE_URL is set to a valid postgres URL, those moves will be persisted in two tables."]]])
 
 ;; -------------------------
 ;; Routes
