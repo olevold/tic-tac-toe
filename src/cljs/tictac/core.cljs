@@ -36,6 +36,15 @@
   {:handler #(reset! winning-moves (into {} (for [z %] [(js/parseInt (first z)) (second z)])))}
 )
 
+(defn mirror [x]
+  (let [centre-ones (bit-and x 146)
+        right-ones (bit-and x 292)
+        left-ones (bit-and x 73)
+        right-ones-shifted (bit-shift-right right-ones 2)
+        left-ones-shifted (bit-shift-left left-ones 2)]
+    (+ left-ones-shifted right-ones-shifted centre-ones))
+  )
+
 (defn flip-bits[x digits]
     (bit-and (bit-not x) (- (.pow js/Math 2 digits) 1))
 )
