@@ -11,12 +11,14 @@
   (defonce bad-moves (duratom :postgres-db :db-config (System/getenv "DATABASE_URL") :table-name "tictac_bad" :row-id 0 :init {}))
   (catch java.io.IOException e (defonce bad-moves (atom {})) (prn "caught IOException"))
   (catch java.sql.SQLException e (defonce bad-moves (atom {})) (prn "caught SQLException"))
+  (catch java.lang.IllegalArgumentException e (defonce bad-moves (atom {})) (prn "caught IAException"))
   )
 
 (try
   (defonce winning-moves (duratom :postgres-db :db-config (System/getenv "DATABASE_URL") :table-name "tictac_winning" :row-id 0 :init {}))
-  (catch java.io.IOException e (defonce bad-moves (atom {})))
+  (catch java.io.IOException e (defonce winning-moves (atom {})))
   (catch java.sql.SQLException e (defonce winning-moves (atom {})))
+  (catch java.lang.IllegalArgumentException e (defonce winning-moves (atom {})) (prn "caught IAException"))
   )
 
 
