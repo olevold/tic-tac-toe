@@ -98,7 +98,12 @@
 (defn i-won []
   (reset! result 2)
   (swap! winning-moves assoc @state-before-last-computer-move @last-computer-move)
-  (let [form-data (doto (js/FormData.) (.set "position" @state-before-last-computer-move) (.set "move" @last-computer-move))]
+  (swap! winning-moves assoc (mirrored-total-state @state-before-last-computer-move) (mirror @last-computer-move))
+  (let [form-data (doto (js/FormData.)
+                    (.set "position1" @state-before-last-computer-move)
+                    (.set "move1" @last-computer-move)
+                    (.set "position2" (mirrored-total-state @state-before-last-computer-move))
+                    (.set "move2" (mirror @last-computer-move)))]
     (POST "/report-winning-move" {:body form-data :format (raw-response-format)})
     )
 )

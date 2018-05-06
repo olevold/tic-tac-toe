@@ -59,10 +59,13 @@
 
 (defn report-winning-move [req]
   (let [params (:multipart-params req)
-        position (Integer/parseInt (get params "position"))
-        move     (Integer/parseInt (get params "move"))
+        position1 (Integer/parseInt (get params "position1"))
+        move1     (Integer/parseInt (get params "move1"))
+        position2 (Integer/parseInt (get params "position2"))
+        move2     (Integer/parseInt (get params "move2"))
         ]
-        (swap! winning-moves assoc position move)
+        (swap! winning-moves assoc position1 move1)
+        (swap! winning-moves assoc position2 move2)
     )
   )
 
