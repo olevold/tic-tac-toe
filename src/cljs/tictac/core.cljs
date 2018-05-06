@@ -53,6 +53,13 @@
   (+ (* 512 @player-checked) @computer-checked)
 )
 
+(defn mirrored-total-state [state]
+  (let [player (quot state 512)
+        computer (mod state 512)]
+      (+ (* 512 (mirror player)) (mirror computer))
+  )
+)
+
 (defn cell-content [mask]
   (cond
     (= (bit-and @player-checked mask) mask) [:svg {:class "svg-container"}
@@ -72,7 +79,13 @@
 
 (defn i-lost []
   (swap! bad-moves assoc @state-before-last-computer-move (bit-or (get @bad-moves @state-before-last-computer-move) @last-computer-move))
-  (let [form-data (doto (js/FormData.) (.set "position" @state-before-last-computer-move) (.set "move" @last-computer-move))]
+  (swap! bad-moves assoc (mirrored-total-state @state-before-last-computer-move)
+                          (bit-or  (get @bad-moves (mirrored-total-state @state-before-last-computer-move)) (mirror @last-computer-move)))
+  (let [form-data (doto (js/FormData.)
+                    (.set "position1" @state-before-last-computer-move)
+                    (.set "move1" @last-computer-move)
+                    (.set "position2" (mirrored-total-state @state-before-last-computer-move))
+                    (.set "move2" (mirrored-total-state @last-computer-move)))]
     (POST "/report-bad-move" {:body form-data :format (raw-response-format)})
     )
   )
