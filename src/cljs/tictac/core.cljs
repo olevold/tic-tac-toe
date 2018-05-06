@@ -36,12 +36,28 @@
   {:handler #(reset! winning-moves (into {} (for [z %] [(js/parseInt (first z)) (second z)])))}
 )
 
+(defn mirror [x]
+  (let [centre-ones (bit-and x 146)
+        right-ones (bit-and x 292)
+        left-ones (bit-and x 73)
+        right-ones-shifted (bit-shift-right right-ones 2)
+        left-ones-shifted (bit-shift-left left-ones 2)]
+    (+ left-ones-shifted right-ones-shifted centre-ones))
+  )
+
 (defn flip-bits[x digits]
     (bit-and (bit-not x) (- (.pow js/Math 2 digits) 1))
 )
 
 (defn total-state []
   (+ (* 512 @player-checked) @computer-checked)
+)
+
+(defn mirrored-total-state [state]
+  (let [player (quot state 512)
+        computer (mod state 512)]
+      (+ (* 512 (mirror player)) (mirror computer))
+  )
 )
 
 (defn cell-content [mask]
@@ -63,7 +79,13 @@
 
 (defn i-lost []
   (swap! bad-moves assoc @state-before-last-computer-move (bit-or (get @bad-moves @state-before-last-computer-move) @last-computer-move))
-  (let [form-data (doto (js/FormData.) (.set "position" @state-before-last-computer-move) (.set "move" @last-computer-move))]
+  (swap! bad-moves assoc (mirrored-total-state @state-before-last-computer-move)
+                          (bit-or  (get @bad-moves (mirrored-total-state @state-before-last-computer-move)) (mirror @last-computer-move)))
+  (let [form-data (doto (js/FormData.)
+                    (.set "position1" @state-before-last-computer-move)
+                    (.set "move1" @last-computer-move)
+                    (.set "position2" (mirrored-total-state @state-before-last-computer-move))
+                    (.set "move2" (mirrored-total-state @last-computer-move)))]
     (POST "/report-bad-move" {:body form-data :format (raw-response-format)})
     )
   )
@@ -76,7 +98,12 @@
 (defn i-won []
   (reset! result 2)
   (swap! winning-moves assoc @state-before-last-computer-move @last-computer-move)
-  (let [form-data (doto (js/FormData.) (.set "position" @state-before-last-computer-move) (.set "move" @last-computer-move))]
+  (swap! winning-moves assoc (mirrored-total-state @state-before-last-computer-move) (mirror @last-computer-move))
+  (let [form-data (doto (js/FormData.)
+                    (.set "position1" @state-before-last-computer-move)
+                    (.set "move1" @last-computer-move)
+                    (.set "position2" (mirrored-total-state @state-before-last-computer-move))
+                    (.set "move2" (mirror @last-computer-move)))]
     (POST "/report-winning-move" {:body form-data :format (raw-response-format)})
     )
 )

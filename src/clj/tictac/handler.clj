@@ -11,12 +11,14 @@
   (defonce bad-moves (duratom :postgres-db :db-config (System/getenv "DATABASE_URL") :table-name "tictac_bad" :row-id 0 :init {}))
   (catch java.io.IOException e (defonce bad-moves (atom {})) (prn "caught IOException"))
   (catch java.sql.SQLException e (defonce bad-moves (atom {})) (prn "caught SQLException"))
+  (catch java.lang.IllegalArgumentException e (defonce bad-moves (atom {})) (prn "caught IAException"))
   )
 
 (try
   (defonce winning-moves (duratom :postgres-db :db-config (System/getenv "DATABASE_URL") :table-name "tictac_winning" :row-id 0 :init {}))
-  (catch java.io.IOException e (defonce bad-moves (atom {})))
+  (catch java.io.IOException e (defonce winning-moves (atom {})))
   (catch java.sql.SQLException e (defonce winning-moves (atom {})))
+  (catch java.lang.IllegalArgumentException e (defonce winning-moves (atom {})) (prn "caught IAException"))
   )
 
 
@@ -45,19 +47,25 @@
 
 (defn report-bad-move [req]
   (let [params (:multipart-params req)
-        position (Integer/parseInt (get params "position"))
-        move     (Integer/parseInt (get params "move"))
+        position1 (Integer/parseInt (get params "position1"))
+        move1     (Integer/parseInt (get params "move1"))
+        position2 (Integer/parseInt (get params "position2"))
+        move2     (Integer/parseInt (get params "move2"))
         ]
-        (swap! bad-moves assoc position (bit-or (or (get @bad-moves position) 0) move))
+        (swap! bad-moves assoc position1 (bit-or (or (get @bad-moves position1) 0) move1))
+        (swap! bad-moves assoc position2 (bit-or (or (get @bad-moves position2) 0) move2))
     )
   )
 
 (defn report-winning-move [req]
   (let [params (:multipart-params req)
-        position (Integer/parseInt (get params "position"))
-        move     (Integer/parseInt (get params "move"))
+        position1 (Integer/parseInt (get params "position1"))
+        move1     (Integer/parseInt (get params "move1"))
+        position2 (Integer/parseInt (get params "position2"))
+        move2     (Integer/parseInt (get params "move2"))
         ]
-        (swap! winning-moves assoc position move)
+        (swap! winning-moves assoc position1 move1)
+        (swap! winning-moves assoc position2 move2)
     )
   )
 
