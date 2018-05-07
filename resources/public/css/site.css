@@ -58,9 +58,6 @@ td {
 }
 
 circle {
-  cx: 40;
-  cy: 40;
-  r: 34;
   stroke: #333;
   stroke-width: 10px;
   stroke-dasharray: 215;
@@ -98,12 +95,9 @@ line {
   }
 
   circle {
-    cx: 60;
-    cy: 60;
-    r: 50;
     stroke-width: 15px;
-    stroke-dasharray: 314;
-    stroke-dashoffset: 314;
+    stroke-dasharray: 320;
+    stroke-dashoffset: 320;
     animation: draw_it 1s ;
     animation-fill-mode: forwards;
   }
@@ -114,7 +108,7 @@ line {
 
   @keyframes draw_it {
     from {
-        stroke-dashoffset: 314;
+        stroke-dashoffset: 320;
     }
       to {
         stroke-dashoffset: 0;

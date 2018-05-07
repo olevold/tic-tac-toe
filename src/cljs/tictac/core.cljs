@@ -66,7 +66,7 @@
                                                   [:line {:x1 "5%" :x2 "95%" :y1 "5%" :y2 "95%"}]
                                                   [:line {:x1 "95%" :x2 "5%" :y1 "5%" :y2 "95%"}]]
     (= (bit-and @computer-checked mask) mask) [:svg {:class "svg-container"}
-                                                  [:circle {:fill "none"}]]
+                                                  [:circle {:fill "none" :cx "50%" :cy "50%" :r "42%"}]]
     :else "")
   )
 
