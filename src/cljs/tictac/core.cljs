@@ -45,6 +45,20 @@
     (+ left-ones-shifted right-ones-shifted centre-ones))
   )
 
+(defn rotate [x]
+  (+
+    (if (= (bit-and x 1) 1) 4 0)
+    (if (= (bit-and x 2) 2) 32 0)
+    (if (= (bit-and x 4) 4) 256 0)
+    (if (= (bit-and x 8) 8) 2 0)
+    (if (= (bit-and x 16) 16) 16 0)
+    (if (= (bit-and x 32) 32) 128 0)
+    (if (= (bit-and x 64) 64) 1 0)
+    (if (= (bit-and x 128) 128) 8 0)
+    (if (= (bit-and x 256) 256) 64 0)
+    )
+  )
+
 (defn flip-bits[x digits]
     (bit-and (bit-not x) (- (.pow js/Math 2 digits) 1))
 )
